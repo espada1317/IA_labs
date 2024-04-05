@@ -121,3 +121,7 @@ def print_element_with_capital(input_set):
             if any(char.isupper() for char in word):
                 print(item)
                 break
+
+def print_trues(input_set):
+    for item in input_set:
+        print(item)

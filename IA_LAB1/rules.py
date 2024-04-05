@@ -20,23 +20,22 @@ FANTASY_RULES = (
            '(?x) is young'),
        THEN('(?x) is handsome')),
 
-    IF(AND('(?x) travels on horse'),  # R5
-       THEN('(?x) is adventurer')),
-
-    IF(AND('(?x) travels lightly'),  # R6
+    IF(OR('(?x) travels on horse',  # R5
+          '(?x) travels lightly'),
        THEN('(?x) is adventurer')),
 
     IF(AND('(?x) wears robes',  # R7
            '(?x) wears black clothing'),
        THEN('(?x) has symbolic profession')),
 
-    IF(AND('(?x) has symbol of cross'),  # R8
-       THEN('(?x) is christian')),
-
-    IF(AND('(?x) is bald',  # R9
+    IF(AND('(?x) is bald',  # R8
            '(?x) has beads',
            '(?x) has beard',
            '(?x) is old'),
+       THEN('(?x) is believer')),
+
+    IF(OR('(?x) has symbol of cross',   # R9
+          "(?x) is believer"),
        THEN('(?x) is christian')),
 
     IF(AND('(?x) has beard',  # R10
@@ -107,7 +106,6 @@ KNIGHT_DATA = (
 
 MONK_DATA = (
     'bodhidharma travels lightly',
-    'bodhidharma has symbol of cross',
     'bodhidharma wears robes',
     'bodhidharma wears black clothing',
     'bodhidharma is bald',

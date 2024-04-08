@@ -16,32 +16,38 @@ def generate_question():
 
 
 def remove_unnecessary_truths(truth):
+    check_truth = "he " + truth
     for mid_truth in MID_AND_TRUTHS:
         list_bounded_truths = backward_chain(FANTASY_RULES, "he " + mid_truth)
-        if truth in list_bounded_truths:
+        if check_truth in list_bounded_truths:
             for elem in list_bounded_truths:
-                print(elem)
                 trimmed_elem = elem.replace("he", "").strip()
-                print(trimmed_elem)
                 if trimmed_elem in INITIAL_TRUTHS:
                     INITIAL_TRUTHS.pop(trimmed_elem)
 
 
 def akinator_clone_algorithm():
     character_info = ()
+    result = ""
     while len(INITIAL_TRUTHS) > 0:
         truth, question = generate_question()
         answer = input(question + "  (Y/N):  ")
         if answer.lower() == "y":
             character_info += ("he " + truth,)
-        else:
+        elif answer.lower() == "n":
             remove_unnecessary_truths(truth)
-        INITIAL_TRUTHS.pop(truth)
-        if print_element_with_capital(forward_chain(FANTASY_RULES, character_info)) is not None:
-            print_element_with_capital(forward_chain(FANTASY_RULES, character_info))
+        else:
+            continue
+        if truth in INITIAL_TRUTHS:
+            INITIAL_TRUTHS.pop(truth)
+        if (print_element_with_capital(forward_chain(FANTASY_RULES, character_info)) is not None
+                and len(print_element_with_capital(forward_chain(FANTASY_RULES, character_info))) > 0):
+            result = print_element_with_capital(forward_chain(FANTASY_RULES, character_info))
             break
-    print(character_info)
-    print(forward_chain(FANTASY_RULES, character_info))
+    if len(result) == 0:
+        print("Answer -> You are watching an ordinary city folk")
+    else:
+        print("Answer # " + result)
 
 
 if __name__ == '__main__':
@@ -58,6 +64,6 @@ if __name__ == '__main__':
     # print(generateQuestion(INITIAL_TRUTHS))
     # print(generateQuestion(INITIAL_TRUTHS))
 
-    # akinator_clone_algorithm()
+    akinator_clone_algorithm()
 
-    remove_unnecessary_truths('he has blue eyes')
+    # remove_unnecessary_truths('he has blue eyes')

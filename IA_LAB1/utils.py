@@ -119,8 +119,7 @@ def print_element_with_capital(input_set):
         words = item.split()
         for word in words:
             if any(char.isupper() for char in word):
-                print(item)
-                break
+                return item
 
 def printTrues(input_set):
     for item in input_set:

@@ -122,6 +122,6 @@ def print_element_with_capital(input_set):
                 print(item)
                 break
 
-def print_trues(input_set):
+def printTrues(input_set):
     for item in input_set:
         print(item)

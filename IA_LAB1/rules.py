@@ -90,7 +90,7 @@ BARD_DATA = (
     'taliesin has blonde hair',
     'taliesin has blue eyes',
     'taliesin is young',
-    'taliesin travels on horse',
+    'taliesin travels on horse'
 )
 
 KNIGHT_DATA = (
@@ -101,7 +101,7 @@ KNIGHT_DATA = (
     'archibald has blue eyes',
     'archibald is young',
     'archibald travels on horse',
-    'archibald has symbol of cross',
+    'archibald has symbol of cross'
 )
 
 MONK_DATA = (
@@ -111,7 +111,7 @@ MONK_DATA = (
     'bodhidharma is bald',
     'bodhidharma has beads',
     'bodhidharma has beard',
-    'bodhidharma is old',
+    'bodhidharma is old'
 )
 
 ALCHEMIST_DATA = (
@@ -123,7 +123,7 @@ ALCHEMIST_DATA = (
     'nicolas has grizzle hair',
     'nicolas has mysterious books',
     'nicolas has potions',
-    'nicolas has runes',
+    'nicolas has runes'
 )
 
 ARCHMAGE_DATA = (
@@ -135,5 +135,43 @@ ARCHMAGE_DATA = (
     'hayul has mysterious books',
     'hayul has potions',
     'hayul has runes',
-    'hayul has magic staff',
+    'hayul has magic staff'
+)
+
+INITIAL_TRUTHS = {
+    'has bird feather': 'He has bird feather?',
+    'has musical instrument': 'He has musical instrument?',
+    'has colorful clothes': 'He has colorful clothes?',
+    'has jewelry': 'He has jewelry?',
+    'wears sword': 'He wears sword?',
+    'wears shining armor': 'He wears shining armor?',
+    'has blonde hair': 'He has blonde hair?',
+    'has blue eyes': 'He has blue eyes?',
+    'is young': 'He is young?',
+    'travels on horse': 'He travels on horse?',
+    'travels lightly': 'He travels lightly?',
+    'wears robes': 'He wears robes?',
+    'wears black clothing': 'He wears black clothing?',
+    'is bald': 'He is bald?',
+    'has beads': 'He has beads?',
+    'has beard': 'He has beard?',
+    'is old': 'He is old?',
+    'has grizzle hair': 'He has grizzle hair?',
+    'has symbol of cross': 'He has symbol of cross?',
+    'has mysterious books': 'He has mysterious books?',
+    'has potions': 'He has potions?',
+    'has runes': 'He has runes?',
+    'has magic staff': 'He has magic staff?',
+    'has star sign': 'He has star sign?',
+    'has herald': 'He has herald?'
+}
+
+MID_AND_TRUTHS = (
+    'is a poet',
+    'is stylish',
+    'is warrior',
+    'has symbolic profession',
+    'is believer',
+    'has a lot of experience',
+    'is handsome'
 )

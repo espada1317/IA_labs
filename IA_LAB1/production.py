@@ -63,24 +63,18 @@ def backward_chain(rules, hypothesis, verbose=False):
     if length == 0:
         return hypothesis
     tree = AND()
-
     for element in rules:
         consequent = element.consequent()
         mat = match(consequent[0], hypothesis)
         if mat is not None and len(mat) >= 0:
             antecedent = element.antecedent()
             if isinstance(antecedent, list):
-                sub = AND()
-                if isinstance(antecedent, OR): sub = OR()
+                sub = OR() if isinstance(antecedent, OR) else AND()
                 for x in antecedent:
                     new_tree = backward_chain(rules, populate(x, mat))
                     sub.append(new_tree)
                 tree.append(sub)
-            else:
-                new_tree = backward_chain(rules, populate(antecedent, mat))
-                tree.append(AND(new_tree))
-        else:
-            tree.append(hypothesis)
+    tree.append(hypothesis)
     return simplify(tree)
 
 

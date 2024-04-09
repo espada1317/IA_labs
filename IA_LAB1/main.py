@@ -58,8 +58,11 @@ if __name__ == '__main__':
     # print_element_with_capital(forward_chain(FANTASY_RULES, MONK_DATA))
     # print_element_with_capital(forward_chain(FANTASY_RULES, ALCHEMIST_DATA))
     # print_element_with_capital(forward_chain(FANTASY_RULES, ARCHMAGE_DATA))
+
     # print("\nBackward chaining:")
+    # print(backward_chain(FANTASY_RULES, 'bodhidharma is handsome'))
     # printTrues(backward_chain(FANTASY_RULES, 'bodhidharma is a MONK'))
+    # printTrues(backward_chain(FANTASY_RULES, 'bodhidharma is a BARD'))
     # print(generateQuestion(INITIAL_TRUTHS))
 
     akinator_clone_algorithm()

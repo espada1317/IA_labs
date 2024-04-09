@@ -31,7 +31,7 @@ def blur_image(image, kernel_size=(5, 5)):
     return blurred
 
 
-def sharpen_image(image, kernel_size=(3, 3), alpha=1.5, beta=-0.5):
+def sharpen_image(image, alpha=1.5, beta=-0.5):
     kernel = np.array([[-1, -1, -1],
                        [-1, 9, -1],
                        [-1, -1, -1]])

@@ -15,6 +15,11 @@ def generate_question():
     return random_key, random_value
 
 
+def remove_question_from_map(truth):
+    if truth in INITIAL_TRUTHS:
+        INITIAL_TRUTHS.pop(truth)
+
+
 def remove_unnecessary_truths(truth):
     check_truth = "he " + truth
     for mid_truth in MID_AND_TRUTHS:
@@ -22,8 +27,7 @@ def remove_unnecessary_truths(truth):
         if check_truth in list_bounded_truths:
             for elem in list_bounded_truths:
                 trimmed_elem = elem.replace("he", "").strip()
-                if trimmed_elem in INITIAL_TRUTHS:
-                    INITIAL_TRUTHS.pop(trimmed_elem)
+                remove_question_from_map(trimmed_elem)
 
 
 def akinator_clone_algorithm():
@@ -38,10 +42,8 @@ def akinator_clone_algorithm():
             remove_unnecessary_truths(truth)
         else:
             continue
-        if truth in INITIAL_TRUTHS:
-            INITIAL_TRUTHS.pop(truth)
-        if (print_element_with_capital(forward_chain(FANTASY_RULES, character_info)) is not None
-                and len(print_element_with_capital(forward_chain(FANTASY_RULES, character_info))) > 0):
+        remove_question_from_map(truth)
+        if print_element_with_capital(forward_chain(FANTASY_RULES, character_info)) is not None:
             result = print_element_with_capital(forward_chain(FANTASY_RULES, character_info))
             break
     if len(result) == 0:
@@ -56,14 +58,8 @@ if __name__ == '__main__':
     # print_element_with_capital(forward_chain(FANTASY_RULES, MONK_DATA))
     # print_element_with_capital(forward_chain(FANTASY_RULES, ALCHEMIST_DATA))
     # print_element_with_capital(forward_chain(FANTASY_RULES, ARCHMAGE_DATA))
-
     # print("\nBackward chaining:")
-    # printTrues(backward_chain(FANTASY_RULES, 'taliesin is a BARD'))
     # printTrues(backward_chain(FANTASY_RULES, 'bodhidharma is a MONK'))
-
-    # print(generateQuestion(INITIAL_TRUTHS))
     # print(generateQuestion(INITIAL_TRUTHS))
 
     akinator_clone_algorithm()
-
-    # remove_unnecessary_truths('he has blue eyes')

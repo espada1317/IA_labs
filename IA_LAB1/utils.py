@@ -1,13 +1,12 @@
 import sys
 
-
 VERSION = 3
-if sys.version[0]=='2':
+if sys.version[0] == '2':
     VERSION = 2
     from UserDict import DictMixin
     import re
     # print("2")
-elif sys.version[0]=='3':
+elif sys.version[0] == '3':
     VERSION = 3
     from collections import UserDict
     import regex as re
@@ -18,7 +17,8 @@ class ClobberedDictKey(Exception):
     "A flag that a variable has been assigned two incompatible values."
     pass
 
-if VERSION==2:
+
+if VERSION == 2:
     class NoClobberDict(DictMixin):
 
         """
@@ -26,12 +26,13 @@ if VERSION==2:
         overwritten by different values. If that happens, it indicates a
         failure to match.
         """
-        def __init__(self, initial_dict = None):
+
+        def __init__(self, initial_dict=None):
             if initial_dict == None:
                 self._dict = {}
             else:
                 self._dict = dict(initial_dict)
-            
+
         def __getitem__(self, key):
             return self._dict[key]
 
@@ -53,24 +54,25 @@ if VERSION==2:
 
         def iteritems(self):
             return self._dict.iteritems()
-            
+
         def keys(self):
             return self._dict.keys()
 
-elif VERSION==3:
-    class NoClobberDict(UserDict): #for python3
+elif VERSION == 3:
+    class NoClobberDict(UserDict):  # for python3
 
         """
         A dictionary-like object that prevents its values from being
         overwritten by different values. If that happens, it indicates a
         failure to match.
         """
-        def __init__(self, initial_dict = None):
+
+        def __init__(self, initial_dict=None):
             if initial_dict == None:
                 self._dict = {}
             else:
                 self._dict = dict(initial_dict)
-            
+
         def __getitem__(self, key):
             return self._dict[key]
 
@@ -92,27 +94,28 @@ elif VERSION==3:
 
         def iteritems(self):
             return self._dict.iteritems()
-            
+
         def keys(self):
             return self._dict.keys()
-
 
 # A regular expression for finding variables.
 AIRegex = re.compile(r'\(\?([^ \t\n\r\f\v]+)\)')
 
+
 def AIStringToRegex(AIStr):
-    res =  AIRegex.sub( r'(?P<\1>[^ \t\n\r\f\v]+)', AIStr )+'$'
+    res = AIRegex.sub(r'(?P<\1>[^ \t\n\r\f\v]+)', AIStr) + '$'
     return res
 
 
 def AIStringToPyTemplate(AIStr):
-    return AIRegex.sub( r'%(\1)s', AIStr )
+    return AIRegex.sub(r'%(\1)s', AIStr)
 
 
 def AIStringVars(AIStr):
     # This is not the fastest way of doing things, but
     # it is probably the most explicit and robust
-    return set([ AIRegex.sub(r'\1', x) for x in AIRegex.findall(AIStr) ])
+    return set([AIRegex.sub(r'\1', x) for x in AIRegex.findall(AIStr)])
+
 
 def print_element_with_capital(input_set):
     for item in input_set:
@@ -120,6 +123,7 @@ def print_element_with_capital(input_set):
         for word in words:
             if any(char.isupper() for char in word):
                 return item
+
 
 def printTrues(input_set):
     for item in input_set:

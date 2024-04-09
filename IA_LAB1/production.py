@@ -1,9 +1,10 @@
 # import re
 import sys
-if sys.version[0]=='2':
+
+if sys.version[0] == '2':
     import re
 
-elif sys.version[0]=='3':
+elif sys.version[0] == '3':
     import regex as re
 
 from utils import *
@@ -93,17 +94,20 @@ def instantiate(template, values_dict):
     => "sister Lisa Bart"
     """
     if (isinstance(template, AND) or isinstance(template, OR) or
-        isinstance(template, NOT)):
+            isinstance(template, NOT)):
 
         return template.__class__(*[populate(x, values_dict)
                                     for x in template])
     # elif isinstance(template, basestring):
     elif isinstance(template, str):
         return AIStringToPyTemplate(template) % values_dict
-    else: raise ValueError ("Don't know how to populate a %s" % type(template))
+    else:
+        raise ValueError("Don't know how to populate a %s" % type(template))
+
 
 # alternate name for instantiate
 populate = instantiate
+
 
 def match(template, AIStr):
     """
@@ -116,18 +120,20 @@ def match(template, AIStr):
     AIStr, or None if no such set exists.
     """
     try:
-        return re.match( AIStringToRegex(template),
-                         AIStr ).groupdict()
-    except AttributeError: # The re.match() expression probably
-                           # just returned None
+        return re.match(AIStringToRegex(template),
+                        AIStr).groupdict()
+    except AttributeError:  # The re.match() expression probably
+        # just returned None
         return None
+
 
 def is_variable(str):
     """Is 'str' a variable, of the form '(?x)'?"""
     # return isinstance(str, basestring) and str[0] == '(' and \
     #   str[-1] == ')' and re.search( AIStringToRegex(str) )
     return isinstance(str) and str[0] == '(' and \
-      str[-1] == ')' and re.search( AIStringToRegex(str) )
+        str[-1] == ')' and re.search(AIStringToRegex(str))
+
 
 def variables(exp):
     """
@@ -135,10 +141,11 @@ def variables(exp):
     'exp' as keys, or None if there are no such variables.
     """
     try:
-        return re.search( AIStringToRegex(exp).groupdict() )
-    except AttributeError: # The re.match() expression probably
-                           # just returned None
+        return re.search(AIStringToRegex(exp).groupdict())
+    except AttributeError:  # The re.match() expression probably
+        # just returned None
         return None
+
 
 class IF(object):
     """
@@ -158,8 +165,9 @@ class IF(object):
     that will be deleted when the rule fires. Again, variables
     can be filled in from the antecedent.
     """
-    def __init__(self, conditional, action = None,
-                 delete_clause = ()):
+
+    def __init__(self, conditional, action=None,
+                 delete_clause=()):
         # Deal with an edge case imposed by type_encode()
         if type(conditional) == list and action == None:
             return self.apply(self.__init__, conditional)
@@ -168,7 +176,7 @@ class IF(object):
         # iterable list of strings
         # if isinstance(action, basestring):
         if isinstance(action, str):
-            action = [ action ]
+            action = [action]
 
         self._conditional = conditional
         self._action = action
@@ -190,7 +198,7 @@ class IF(object):
 
         for k in bindings:
             for a in self._action:
-                new_rules.add( populate(a, k) )
+                new_rules.add(populate(a, k))
                 if len(new_rules) != old_rules_count:
                     if verbose:
                         print("Rule:", self)
@@ -199,7 +207,7 @@ class IF(object):
                         return tuple(sorted(new_rules))
             for d in self._delete_clause:
                 try:
-                    new_rules.remove( populate(d, k) )
+                    new_rules.remove(populate(d, k))
                     if len(new_rules) != old_rules_count:
                         if verbose:
                             print("Rule:", self)
@@ -209,9 +217,8 @@ class IF(object):
                 except KeyError:
                     pass
 
-        return tuple(sorted(new_rules)) # Uniquify and sort the
-                                        # output list
-
+        return tuple(sorted(new_rules))  # Uniquify and sort the
+        # output list
 
     def __str__(self):
         return "IF(%s, %s)" % (str(self._conditional),
@@ -225,6 +232,7 @@ class IF(object):
 
     __repr__ = __str__
 
+
 class RuleExpression(list):
     """
     The parent class of AND, OR, and NOT expressions.
@@ -234,9 +242,10 @@ class RuleExpression(list):
     out the brackets when initializing them: AND([1, 2, 3]) ==
     AND(1, 2, 3).
     """
+
     def __init__(self, *args):
         if (len(args) == 1 and isinstance(args[0], list)
-            and not isinstance(args[0], RuleExpression)):
+                and not isinstance(args[0], RuleExpression)):
             args = args[0]
         list.__init__(self, args)
 
@@ -250,12 +259,12 @@ class RuleExpression(list):
 
     def __str__(self):
         return '%s(%s)' % (self.__class__.__name__,
-                           ', '.join([repr(x) for x in self]) )
+                           ', '.join([repr(x) for x in self]))
 
     __repr__ = __str__
 
     def test_term_matches(self, condition, rules,
-                          context_so_far = None):
+                          context_so_far=None):
         """
         Given an expression which might be just a string, check
         it against the rules.
@@ -308,16 +317,18 @@ class RuleExpression(list):
     def __hash__(self):
         return hash((self.__class__.__name__, list(self)))
 
+
 class AND(RuleExpression):
     """A conjunction of patterns, all of which must match."""
+
     class FailMatchException(Exception):
         pass
 
-    def test_matches(self, rules, context_so_far = {}):
+    def test_matches(self, rules, context_so_far={}):
         return self._test_matches_iter(rules, list(self))
 
-    def _test_matches_iter(self, rules, conditions = None,
-                           cumulative_dict = None):
+    def _test_matches_iter(self, rules, conditions=None,
+                           cumulative_dict=None):
         """
         Recursively generate all possible matches.
         """
@@ -344,7 +355,7 @@ class AND(RuleExpression):
             try:
                 bindings.update(cumulative_dict)
                 for bindings2 in self._test_matches_iter(rules,
-                  conditions[1:], bindings):
+                                                         conditions[1:], bindings):
                     yield bindings2
             except ClobberedDictKey:
                 pass
@@ -352,17 +363,20 @@ class AND(RuleExpression):
 
 class OR(RuleExpression):
     """A disjunction of patterns, one of which must match."""
-    def test_matches(self, rules, context_so_far = {}):
+
+    def test_matches(self, rules, context_so_far={}):
         for condition in self:
             for bindings in self.test_term_matches(condition, rules):
                 yield bindings
 
+
 class NOT(RuleExpression):
     """A RuleExpression for negation. A NOT clause must only have
     one part."""
-    def test_matches(self, data, context_so_far = {}):
-        assert len(self) == 1 # We're unary; we can only process
-                              # one condition
+
+    def test_matches(self, data, context_so_far={}):
+        assert len(self) == 1  # We're unary; we can only process
+        # one condition
 
         try:
             new_key = populate(self[0], context_so_far)
@@ -383,16 +397,17 @@ class THEN(list):
     """
     A THEN expression is a container with no interesting semantics.
     """
+
     def __init__(self, *args):
         if (len(args) == 1 and isinstance(args[0], list)
-            and not isinstance(args[0], RuleExpression)):
+                and not isinstance(args[0], RuleExpression)):
             args = args[0]
         super(list, self).__init__()
         for a in args:
             self.append(a)
 
     def __str__(self):
-        return '%s(%s)' % (self.__class__.__name__, ', '.join([repr(x) for x in self]) )
+        return '%s(%s)' % (self.__class__.__name__, ', '.join([repr(x) for x in self]))
 
     __repr__ = __str__
 
@@ -403,6 +418,7 @@ class DELETE(THEN):
     semantics. That's why it's exactly the same as THEN.
     """
     pass
+
 
 def uniq(lst):
     """
@@ -416,8 +432,9 @@ def uniq(lst):
         # if not seen.has_key(str(item)):
         if not str(item) in seen:
             result.append(item)
-            seen[str(item)]=True
+            seen[str(item)] = True
     return result
+
 
 def simplify(node):
     """
@@ -433,32 +450,40 @@ def simplify(node):
         return _reduce_singletons(_simplify_and(branches))
     elif isinstance(node, OR):
         return _reduce_singletons(_simplify_or(branches))
-    else: return node
+    else:
+        return node
+
 
 def _reduce_singletons(node):
     if not isinstance(node, RuleExpression): return node
     if len(node) == 1: return node[0]
     return node
 
+
 def _simplify_and(branches):
     for b in branches:
         if b == FAIL: return FAIL
     pieces = []
     for branch in branches:
-        if isinstance(branch, AND): pieces.extend(branch)
-        else: pieces.append(branch)
+        if isinstance(branch, AND):
+            pieces.extend(branch)
+        else:
+            pieces.append(branch)
     return AND(*pieces)
+
 
 def _simplify_or(branches):
     for b in branches:
         if b == PASS: return PASS
     pieces = []
     for branch in branches:
-        if isinstance(branch, OR): pieces.extend(branch)
-        else: pieces.append(branch)
+        if isinstance(branch, OR):
+            pieces.extend(branch)
+        else:
+            pieces.append(branch)
     return OR(*pieces)
+
 
 PASS = AND()
 FAIL = OR()
 run_conditions = forward_chain
-

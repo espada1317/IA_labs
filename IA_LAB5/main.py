@@ -149,28 +149,25 @@ def calculate_accuracy(csv_file):
 
 
 if __name__ == '__main__':
-    # csv_file_path = 'test.csv'
-    # accuracy = calculate_accuracy(csv_file_path)
-    #
-    # print(f"Accuracy: {accuracy * 100:.2f}%")
 
     image_path = 'test_images/27DAC4.jpg'
 
-    get_face_recognition_coordinates(image_path)
+    # TASK 1 - CODE
+    plot_initial_and_blured_image(image_path)
 
-    # is_accepted, message = passport_acceptance_system(image_path)
-    #
-    # if is_accepted:
-    #     print(message)
-    # else:
-    #     print(message)
+    # TASK 2 - CODE
+    face_coordinates = get_face_recognition_coordinates(image_path)
+    if face_coordinates is not None:
+        print("Face detected at coordinates:", face_coordinates)
+    else:
+        print("No face detected in the image.")
 
-    # is_photo_accepted_for_passport(image_path)
+    # TASK 3 - CODE
+    is_accepted, message = passport_acceptance_system(image_path)
+    print("Image is accepted - ", is_accepted, ", reason - ", message)
 
-    # plot_initial_and_blured_image(image_path)
-    #
-    # face_position = get_face_recognition_coordinates(image_path)
-    # if face_position is not None:
-    #     print("Face detected at coordinates:", face_position)
-    # else:
-    #     print("No face detected in the image.")
+
+    # TASK 4 - CODE
+    csv_file_path = 'test.csv'
+    accuracy = calculate_accuracy(csv_file_path)
+    print(f"Accuracy: {accuracy * 100:.2f}%")

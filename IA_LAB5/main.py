@@ -166,7 +166,6 @@ if __name__ == '__main__':
     is_accepted, message = passport_acceptance_system(image_path)
     print("Image is accepted - ", is_accepted, ", reason - ", message)
 
-
     # TASK 4 - CODE
     csv_file_path = 'test.csv'
     accuracy = calculate_accuracy(csv_file_path)

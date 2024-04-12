@@ -107,20 +107,20 @@ def akinator_clone_algorithm():
 
 
 if __name__ == '__main__':
-    # # Test forward chaining algo for predefined
-    # print_element_with_capital(forward_chain(FANTASY_RULES, BARD_DATA))
-    # print_element_with_capital(forward_chain(FANTASY_RULES, KNIGHT_DATA))
-    # print_element_with_capital(forward_chain(FANTASY_RULES, MONK_DATA))
-    # print_element_with_capital(forward_chain(FANTASY_RULES, ALCHEMIST_DATA))
-    # print_element_with_capital(forward_chain(FANTASY_RULES, ARCHMAGE_DATA))
-    #
-    # # Test backward chaining
-    # print(backward_chain(FANTASY_RULES, 'bodhidharma is handsome'))
-    # printTrues(backward_chain(FANTASY_RULES, 'bodhidharma is a MONK'))
-    # printTrues(backward_chain(FANTASY_RULES, 'bodhidharma is a BARD'))
-    #
-    # # Test generation of questions from initial map
-    # print(generate_question())
-    #
-    # # Start expert system
+    # Test forward chaining algo for predefined
+    print_element_with_capital(forward_chain(FANTASY_RULES, BARD_DATA))
+    print_element_with_capital(forward_chain(FANTASY_RULES, KNIGHT_DATA))
+    print_element_with_capital(forward_chain(FANTASY_RULES, MONK_DATA))
+    print_element_with_capital(forward_chain(FANTASY_RULES, ALCHEMIST_DATA))
+    print_element_with_capital(forward_chain(FANTASY_RULES, ARCHMAGE_DATA))
+
+    # Test backward chaining
+    print(backward_chain(FANTASY_RULES, 'bodhidharma is handsome'))
+    print(backward_chain(FANTASY_RULES, 'bodhidharma is a MONK'))
+    print(backward_chain(FANTASY_RULES, 'bodhidharma is a BARD'))
+
+    # Test generation of questions from initial map
+    print(generate_question())
+
+    # Start expert system
     akinator_clone_algorithm()

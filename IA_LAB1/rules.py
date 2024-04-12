@@ -138,40 +138,38 @@ ARCHMAGE_DATA = (
     'hayul has magic staff'
 )
 
-INITIAL_TRUTHS = {
-    'has bird feather': 'He has bird feather?',
-    'has musical instrument': 'He has musical instrument?',
-    'has colorful clothes': 'He has colorful clothes?',
-    'has jewelry': 'He has jewelry?',
-    'wears sword': 'He wears sword?',
-    'wears shining armor': 'He wears shining armor?',
-    'has blonde hair': 'He has blonde hair?',
-    'has blue eyes': 'He has blue eyes?',
-    'is young': 'He is young?',
-    'travels on horse': 'He travels on horse?',
-    'travels lightly': 'He travels lightly?',
-    'wears robes': 'He wears robes?',
-    'wears black clothing': 'He wears black clothing?',
-    'is bald': 'He is bald?',
-    'has beads': 'He has beads?',
-    'has beard': 'He has beard?',
-    'is old': 'He is old?',
-    'has grizzle hair': 'He has grizzle hair?',
-    'has symbol of cross': 'He has symbol of cross?',
-    'has mysterious books': 'He has mysterious books?',
-    'has potions': 'He has potions?',
-    'has runes': 'He has runes?',
-    'has magic staff': 'He has magic staff?',
-    'has star sign': 'He has star sign?',
-    'has herald': 'He has herald?'
-}
+# INITIAL_TRUTHS = {
+#     'has bird feather': 'He has bird feather?',
+#     'has musical instrument': 'He has musical instrument?',
+#     'has colorful clothes': 'He has colorful clothes?',
+#     'has jewelry': 'He has jewelry?',
+#     'wears sword': 'He wears sword?',
+#     'wears shining armor': 'He wears shining armor?',
+#     'has blonde hair': 'He has blonde hair?',
+#     'has blue eyes': 'He has blue eyes?',
+#     'is young': 'He is young?',
+#     'travels on horse': 'He travels on horse?',
+#     'travels lightly': 'He travels lightly?',
+#     'wears robes': 'He wears robes?',
+#     'wears black clothing': 'He wears black clothing?',
+#     'is bald': 'He is bald?',
+#     'has beads': 'He has beads?',
+#     'has beard': 'He has beard?',
+#     'is old': 'He is old?',
+#     'has grizzle hair': 'He has grizzle hair?',
+#     'has symbol of cross': 'He has symbol of cross?',
+#     'has mysterious books': 'He has mysterious books?',
+#     'has potions': 'He has potions?',
+#     'has runes': 'He has runes?',
+#     'has magic staff': 'He has magic staff?',
+#     'has star sign': 'He has star sign?',
+#     'has herald': 'He has herald?'
+# }
 
-MID_AND_TRUTHS = (
-    'is a poet',
-    'is stylish',
-    'is warrior',
-    'has symbolic profession',
-    'is believer',
-    'has a lot of experience',
-    'is handsome'
-)
+# MID_AND_TRUTHS = (
+#     'is a poet',
+#     'is stylish',
+#     'is warrior',
+#     'has symbolic profession',
+#     'is handsome'
+# )

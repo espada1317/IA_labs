@@ -1,45 +1,32 @@
 from production import forward_chain, backward_chain
 from utils import print_element_with_capital
-from rules import FANTASY_RULES
+from rules import FANTASY_RULES, BARD_DATA, KNIGHT_DATA, MONK_DATA, ALCHEMIST_DATA, ARCHMAGE_DATA
 import random
-import re
 
 
-def tuple_to_string(obj_tuple, delimiter=', '):
-    result_string = ''
-    for obj in obj_tuple:
-        result_string += str(obj) + delimiter
-    if result_string:
-        result_string = result_string[:-len(delimiter)]
-    return result_string
+def define_questions_from_goal_tree(fantasy_rules):
+    intermediate_and_final_truths = []
+    all_antecedent = []
 
-
-def define_questions_from_goal_tree(FANTASY_RULES):
-    # retrieve all final or intermediate truths
-    pattern = r"THEN\('(.*?)'\)"
-    intermediate_and_final_truths = re.findall(pattern, tuple_to_string(FANTASY_RULES))
-
-    # retrieve all antecedents before THEN
-    all_truths = []
-    pattern = r"(?<=AND\()'(.*?)'(?=\))|(?<=OR\()'(.*?)'(?=\))"
-    matches = re.findall(pattern, tuple_to_string(FANTASY_RULES))
-    conditions = [condition for match in matches for condition in match if condition]
-    for condition in conditions:
-        input_string = condition.replace("'", "")
-        elements = input_string.split(",")
-        for element in elements:
-            all_truths.append(element.strip())
+    # retrieve all antecedent and all consequent truths
+    for element in fantasy_rules:
+        consequent = element.consequent()[0]
+        intermediate_and_final_truths.append(consequent)
+        antecedent = element.antecedent()
+        if isinstance(antecedent, list):
+            for x in antecedent:
+                all_antecedent.append(x)
 
     # retrieve all initial truths
-    initial_truths = [item for item in all_truths if item not in intermediate_and_final_truths]
+    initial_truths = [item for item in all_antecedent if item not in intermediate_and_final_truths]
     mapped_objects = {item.replace('(?x)', 'He') + '?': item for item in initial_truths}
     initial_truth_questions_map = {value.replace('(?x) ', ''): key for key, value in mapped_objects.items()}
 
     # filter intermediate truths
-    intermediate_truths = list(set(all_truths).intersection(intermediate_and_final_truths))
+    intermediate_truths = list(set(all_antecedent).intersection(intermediate_and_final_truths))
     for inter in intermediate_truths:
         for intermediate in intermediate_truths:
-            intermediate_list = backward_chain(FANTASY_RULES, intermediate)
+            intermediate_list = backward_chain(fantasy_rules, intermediate)
             intermediate_list = [item for item in intermediate_list if item != intermediate]
             if any('OR' in f' {item} ' for item in intermediate_list):
                 intermediate_truths.remove(intermediate)
@@ -47,11 +34,11 @@ def define_questions_from_goal_tree(FANTASY_RULES):
                 intermediate_truths.remove(intermediate)
     # now filter intermediate that have common initial truths
     for intermediate_extern in intermediate_truths:
-        intermediate_extern_list = backward_chain(FANTASY_RULES, intermediate_extern)
+        intermediate_extern_list = backward_chain(fantasy_rules, intermediate_extern)
         intermediate_extern_list = [item for item in intermediate_extern_list if item != intermediate_extern]
         for intermediate_intern in intermediate_truths:
             if intermediate_extern != intermediate_intern:
-                intermediate_intern_list = backward_chain(FANTASY_RULES, intermediate_intern)
+                intermediate_intern_list = backward_chain(fantasy_rules, intermediate_intern)
                 intermediate_intern_list = [item for item in intermediate_intern_list if item != intermediate_intern]
                 common_items = list(set(intermediate_extern_list).intersection(intermediate_intern_list))
                 if len(common_items) > 0:
@@ -119,8 +106,8 @@ if __name__ == '__main__':
     print(backward_chain(FANTASY_RULES, 'bodhidharma is a MONK'))
     print(backward_chain(FANTASY_RULES, 'bodhidharma is a BARD'))
 
-    # Test generation of questions from initial map
-    print(generate_question())
+    # Test defining question map
+    define_questions_from_goal_tree(FANTASY_RULES)
 
     # Start expert system
     akinator_clone_algorithm()

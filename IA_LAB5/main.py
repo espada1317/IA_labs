@@ -3,11 +3,11 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import dlib
 import csv
+import numpy as np
 
 
-def sharpening_image(image, kernel_size=(5, 5), sigma=1.0, amount=1.5, threshold=0):
-    blurred = cv2.GaussianBlur(image, kernel_size, sigma)
-    sharpened = cv2.addWeighted(image, 1 + amount, blurred, -amount, threshold)
+def sharpening_using_kernel(image, kernel):
+    sharpened = cv2.filter2D(image, -1, kernel)
     return sharpened
 
 
@@ -16,29 +16,42 @@ def blurring_image(image, kernel_size=(5, 5)):
     return blurred
 
 
-def plot_initial_and_blured_image(img_path):
+def plot_initial_blured_sharp_image(img_path):
     image = cv2.imread(img_path)
     image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     blurred_image = blurring_image(image_rgb)
 
-    plt.figure(figsize=(10, 5))
-    plt.subplot(1, 2, 1)
+    kernel1 = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
+    kernel2 = np.array([[-1, -1, -1], [-1, 9, -1], [-1, -1, -1]])
+
+    sharpened_using_kernel1 = sharpening_using_kernel(image_rgb, kernel1)
+    sharpened_using_kernel2 = sharpening_using_kernel(image_rgb, kernel2)
+
+    plt.figure(figsize=(14, 10))
+
+    plt.subplot(2, 2, 1)
     plt.imshow(image_rgb)
     plt.title('Initial image')
-    plt.subplot(1, 2, 2)
+    plt.xticks([])
+    plt.yticks([])
+    plt.subplot(2, 2, 2)
     plt.imshow(blurred_image)
     plt.title('Blurred image')
+    plt.xticks([])
+    plt.yticks([])
+    plt.subplot(2, 2, 3)
+    plt.imshow(sharpened_using_kernel1)
+    plt.title('Sharpened image using kernel with middle 5')
+    plt.xticks([])
+    plt.yticks([])
+    plt.subplot(2, 2, 4)
+    plt.imshow(sharpened_using_kernel2)
+    plt.title('Sharpened image using kernel Laplacian')
+    plt.xticks([])
+    plt.yticks([])
+
     plt.tight_layout()
     plt.show()
-
-
-def extract_faces_from_image(img_path):
-    face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
-    image = cv2.imread(img_path)
-    gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    faces = face_cascade.detectMultiScale(gray_image, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
-
-    return faces
 
 
 def get_face_recognition_coordinates(img_path):
@@ -78,7 +91,7 @@ def check_orientation(image):
     return height >= width
 
 
-def check_eyes_level(face_landmarks, max_error=10):
+def check_eyes_level(face_landmarks, max_error=5):
     left_eye_y = face_landmarks.part(37).y
     right_eye_y = face_landmarks.part(46).y
     return abs(left_eye_y - right_eye_y) <= max_error
@@ -87,7 +100,7 @@ def check_eyes_level(face_landmarks, max_error=10):
 def check_head_size(face_coordinates, image):
     head_area = face_coordinates.area()
     image_area = image.shape[0] * image.shape[1]
-    return 0.2 <= head_area / image_area <= 0.5
+    return 0.19 <= head_area / image_area <= 0.5
 
 
 def passport_acceptance_system(img_path):
@@ -116,7 +129,7 @@ def passport_acceptance_system(img_path):
                     return False, ("Photo is not accepted for passport. The head area is not between 20% and 50% of "
                                    "photo.")
             else:
-                return False, "Photo is not accepted for passport. Subject eyes are not on same level (max error 10 px)."
+                return False, "Photo is not accepted for passport. Subject eyes are not on same level (max error 5 px)."
         else:
             return False, "Photo is not accepted for passport. Photo isn't in portrait orientation or square."
     else:
@@ -153,7 +166,7 @@ if __name__ == '__main__':
     image_path = 'test_images/27DAC4.jpg'
 
     # TASK 1 - CODE
-    plot_initial_and_blured_image(image_path)
+    plot_initial_blured_sharp_image(image_path)
 
     # TASK 2 - CODE
     face_coordinates = get_face_recognition_coordinates(image_path)

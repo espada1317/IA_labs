@@ -3,11 +3,10 @@ from copy import deepcopy
 
 
 class Board:
-
     whites = []
     blacks = []
 
-    def __init__(self, game_mode, ai=False, depth=2, log=False):    # game_mode == 0: whites down/blacks up
+    def __init__(self, game_mode, ai=False, depth=2, log=False):  # game_mode == 0: whites down/blacks up
         self.board = []
         self.game_mode = game_mode
         self.depth = depth
@@ -59,7 +58,7 @@ class Board:
                     else:
                         self.blacks.append(self[i][j])
 
-    def make_move(self, piece, x, y, keep_history=False):    # history is logged when AI searches for moves
+    def make_move(self, piece, x, y, keep_history=False):  # history is logged when AI searches for moves
         old_x = piece.x
         old_y = piece.y
         if keep_history:
@@ -231,12 +230,115 @@ class Board:
                     if piece.color == 'white':
                         white_points += piece.get_score()
                         white_points += piece.x + piece.y
+                        if piece.type == 'King':
+                            white_points += self.calculate_king_safety(piece)
+                        white_points += len(piece.filter_moves(piece.get_moves(self), self))
                     else:
                         black_points += piece.get_score()
                         black_points += piece.x + piece.y
+                        if piece.type == 'King':
+                            black_points += self.calculate_king_safety(piece)
+                        black_points += len(piece.filter_moves(piece.get_moves(self), self))
+
         if self.game_mode == 0:
             return black_points - white_points
         return white_points - black_points
+
+    def calculate_king_safety(self, king):
+        safety_value = 0
+        king_x, king_y = king.x, king.y
+        player_color = king.color
+        opponent_color = 'white' if player_color == 'black' else 'black'
+
+        # Evaluate pawn shield in front of the king
+        pawn_shield = self.get_pawn_shield(king_x, king_y, player_color)
+        safety_value += len(pawn_shield)  # Add value based on the size of the pawn shield
+
+        # Evaluate open files near the king
+        open_files = self.get_open_files(king_x, king_y, player_color)
+        safety_value += len(open_files) * 0.5  # Add value for each open file near the king
+
+        # Evaluate piece placement near the king (e.g., knights, bishops)
+        piece_placement_value = self.evaluate_piece_placement(king_x, king_y, player_color)
+        safety_value += piece_placement_value
+
+        # # Check for opponent threats to the king (e.g., checks, attacks)
+        # opponent_threats = self.get_opponent_threats(king_x, king_y, opponent_color)
+        # safety_value -= len(opponent_threats) * 0.5  # Deduct value for opponent threats
+
+        return safety_value
+
+    def get_pawn_shield(self, king_x, king_y, color):
+        shield = []
+        king_row, king_col = king_x, king_y
+        pawn_offsets = [(1, -1), (1, 0), (1, 1)] if color == 'White' else [(-1, -1), (-1, 0), (-1, 1)]
+        for offset in pawn_offsets:
+            row, col = king_row + offset[0], king_col + offset[1]
+            if self.is_valid_move(row, col) and isinstance(self[row][col], Pawn) and self[row][col].color == color:
+                shield.append((row, col))
+        return shield
+
+    def get_open_files(self, king_x, king_y, color):
+        files = set()
+        king_row, king_col = king_x, king_y
+        for col in range(8):
+            if col != king_col:
+                open_file = True
+                for row in range(8):
+                    if self[row][col] is not None:
+                        open_file = False
+                        break
+                if open_file:
+                    files.add(col)
+        return files
+
+    def evaluate_piece_placement(self, king_x, king_y, color):
+        placement_value = 0
+        king_row, king_col = king_x, king_y
+        for i in range(-1, 2):
+            for j in range(-1, 2):
+                row, col = king_row + i, king_col + j
+                if self.is_valid_move(row, col) and isinstance(self[row][col], (Knight, Bishop)):
+                    placement_value += 0.5 if self[row][col].color == color else -0.5
+        return placement_value
+
+    # def get_opponent_threats(self, king_x, king_y, opponent_color):
+    #     threats = []
+    #     for i in range(8):
+    #         for j in range(8):
+    #             piece = self[i][j]
+    #             if isinstance(piece, ChessPiece) and piece.color == opponent_color:
+    #                 moves = piece.get_moves(self)
+    #                 for move in moves:
+    #                     if move[1] == king_x, king_y:
+    #                         threats.append(piece)
+    #     return threats
+
+    def calculate_pawn_structure_value(self):
+        pawn_structure_value = 0
+        for i in range(8):
+            for j in range(8):
+                piece = self[i][j]
+                if isinstance(piece, Pawn) and piece.color == self.get_player_color():
+                    # penalize isolated pawns
+                    if self.is_isolated_pawn(piece, i, j):
+                        pawn_structure_value -= 0.5
+                    # penalize doubled pawns
+                    if self.is_doubled_pawn(piece, i, j):
+                        pawn_structure_value -= 0.5
+        return pawn_structure_value
+
+    # helper methods for pawn structure evaluation
+    def is_isolated_pawn(self, pawn, row, col):
+        # Check if the pawn is isolated (no friendly pawns on adjacent files)
+        return self[row - 1][col - 1] is None and self[row - 1][col + 1] is None
+
+    def is_doubled_pawn(self, pawn, row, col):
+        # check if the pawn is doubled (another pawn of the same color on the same file)
+        for i in range(8):
+            if isinstance(self[i][col], Pawn) and self[i][col].color == pawn.color and i != row:
+                return True
+        return False
 
     def __str__(self):
         return str(self[::-1]).replace('], ', ']\n')

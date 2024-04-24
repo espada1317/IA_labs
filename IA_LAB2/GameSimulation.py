@@ -112,24 +112,14 @@ def dist(p, q):
 
 def process_sprite_group(sprite_group, canvas):
     """Function to draw sprites on canvas, update them and delete those who became old"""
-    # remove_sprites = set([])
-    #
-    # for sprite in sprite_group:
-    #     sprite.draw(canvas)
-    #
-    #     if sprite.update():  # update returns True if the sprite became old, else False
-    #         remove_sprites.add(sprite)
-    #
-    # if len(remove_sprites):  # if something needs to be deleted
-    #     sprite_group.difference_update(remove_sprites)
     remove_sprites = set([])
 
-    for sprite in sprite_group.copy():  # Create a copy of sprite_group
+    for sprite in sprite_group.copy():
         sprite.draw(canvas)
-        if sprite.update():  # update returns True if the sprite became old, else False
+        if sprite.update():
             remove_sprites.add(sprite)
 
-    if len(remove_sprites):  # if something needs to be deleted
+    if len(remove_sprites):
         sprite_group.difference_update(remove_sprites)
 
 
@@ -161,22 +151,12 @@ def group_group_collide(rock_group, missile_group):
     """
     rocks_destroyed = 0
 
-    for missile in list(missile_group):  # Create a copy of missile_group
+    for missile in list(missile_group):
         if group_collide(rock_group, missile):
             rocks_destroyed += 1
-            # safely mutating the missile group because we iterate on a copy
             missile_group.discard(missile)
 
     return rocks_destroyed
-    # rocks_destroyed = 0
-    #
-    # for missile in list(missile_group):  # iterating over a copy of the missile group
-    #     if group_collide(rock_group, missile):
-    #         rocks_destroyed += 1
-    #         # safely mutating the missile group because we iterate on a copy
-    #         missile_group.discard(missile)
-    #
-    # return rocks_destroyed
 
 
 class Ship:

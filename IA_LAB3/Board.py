@@ -1,3 +1,5 @@
+import random
+
 from ChessPiece import *
 from copy import deepcopy
 
@@ -7,6 +9,14 @@ class Board:
     blacks = []
 
     def __init__(self, game_mode, ai=False, depth=2, log=False):  # game_mode == 0: whites down/blacks up
+        self.zobrist_keys = {}
+        for piece_type in ['Pawn', 'Knight', 'Bishop', 'Rook', 'Queen', 'King']:
+            for color in ['white', 'black']:
+                for row in range(8):
+                    for col in range(8):
+                        key = random.getrandbits(64)
+                        self.zobrist_keys[(piece_type, color, row, col)] = key
+
         self.board = []
         self.game_mode = game_mode
         self.depth = depth
@@ -48,6 +58,17 @@ class Board:
 
         if self.game_mode != 0:
             self.reverse()
+
+    def get_hash_key(self):
+        hash_key = 0
+        for row in range(8):
+            for col in range(8):
+                piece = self.board[row][col]
+                if isinstance(piece, ChessPiece):
+                    piece_type = type(piece).__name__
+                    color = piece.color
+                    hash_key ^= self.zobrist_keys[(piece_type, color, row, col)]
+        return hash_key
 
     def save_pieces(self):
         for i in range(8):
@@ -248,7 +269,7 @@ class Board:
         safety_value = 0
         king_x, king_y = king.x, king.y
         player_color = king.color
-        opponent_color = 'white' if player_color == 'black' else 'black'
+        # opponent_color = 'white' if player_color == 'black' else 'black'
 
         # Evaluate pawn shield in front of the king
         pawn_shield = self.get_pawn_shield(king_x, king_y, player_color)

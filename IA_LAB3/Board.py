@@ -253,13 +253,13 @@ class Board:
                         white_points += piece.x + piece.y
                         if piece.type == 'King':
                             white_points += self.calculate_king_safety(piece)
-                        white_points += len(piece.filter_moves(piece.get_moves(self), self))
+                        white_points += len(piece.filter_moves(piece.get_moves(self), self))*0.5
                     else:
                         black_points += piece.get_score()
                         black_points += piece.x + piece.y
                         if piece.type == 'King':
                             black_points += self.calculate_king_safety(piece)
-                        black_points += len(piece.filter_moves(piece.get_moves(self), self))
+                        black_points += len(piece.filter_moves(piece.get_moves(self), self))*0.5
 
         if self.game_mode == 0:
             return black_points - white_points
@@ -282,10 +282,6 @@ class Board:
         # Evaluate piece placement near the king (e.g., knights, bishops)
         piece_placement_value = self.evaluate_piece_placement(king_x, king_y, player_color)
         safety_value += piece_placement_value
-
-        # # Check for opponent threats to the king (e.g., checks, attacks)
-        # opponent_threats = self.get_opponent_threats(king_x, king_y, opponent_color)
-        # safety_value -= len(opponent_threats) * 0.5  # Deduct value for opponent threats
 
         return safety_value
 

@@ -8,6 +8,7 @@ import random
 logger = Logger()
 transposition_table = {}
 
+
 def log_tree(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
@@ -28,7 +29,6 @@ def write_to_file(board: Board, current_depth):
     logger.append(board_repr)
 
 
-@log_tree
 def minimax(board, depth, max_player, save_move, data):
     if depth == 0 or board.is_terminal():
         data[1] = board.evaluate()
@@ -70,7 +70,6 @@ def minimax(board, depth, max_player, save_move, data):
         return data
 
 
-@log_tree
 def minimax_alpha_beta_pruning(board, depth, alpha, beta, max_player, save_move, data):
     if depth == 0 or board.is_terminal():
         data[1] = board.evaluate()
@@ -172,10 +171,20 @@ def minimax_with_transposition(board, depth, alpha, beta, max_player, save_move,
     return data
 
 
+def minimax_progressive_deepening(board, max_depth, alpha, beta, max_player, save_move, data):
+    best_move = None
+    for depth in range(1, max_depth + 1):
+        result = minimax_with_transposition(board, depth, alpha, beta, max_player, save_move, data)
+        if best_move is None or result[1] > best_move[1]:
+            best_move = result
+    return best_move
+
+
 def get_ai_move(board):
     # moves = minimax(board, board.depth, True, True, [[], 0])
     # moves = minimax_alpha_beta_pruning(board, board.depth, -math.inf, math.inf, True, True, [[], 0])
-    moves = minimax_with_transposition(board, board.depth, -math.inf, math.inf, True, True, [[], 0])
+    # moves = minimax_with_transposition(board, board.depth, -math.inf, math.inf, True, True, [[], 0])
+    moves = minimax_progressive_deepening(board, board.depth, -math.inf, math.inf, True, True, [[], 0])
     if board.log:
         logger.write()
     # moves = [[pawn, move, move_score], [..], [..],[..], total_score]

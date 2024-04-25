@@ -276,7 +276,7 @@ class Board:
         safety_value += len(pawn_shield)  # Add value based on the size of the pawn shield
 
         # Evaluate open files near the king
-        open_files = self.get_open_files(king_x, king_y, player_color)
+        open_files = self.get_open_files(king_x, king_y)
         safety_value += len(open_files) * 0.5  # Add value for each open file near the king
 
         # Evaluate piece placement near the king (e.g., knights, bishops)
@@ -295,7 +295,7 @@ class Board:
                 shield.append((row, col))
         return shield
 
-    def get_open_files(self, king_x, king_y, color):
+    def get_open_files(self, king_x, king_y):
         files = set()
         king_row, king_col = king_x, king_y
         for col in range(8):
@@ -338,7 +338,7 @@ class Board:
                 piece = self[i][j]
                 if isinstance(piece, Pawn) and piece.color == self.get_player_color():
                     # penalize isolated pawns
-                    if self.is_isolated_pawn(piece, i, j):
+                    if self.is_isolated_pawn(i, j):
                         pawn_structure_value -= 0.5
                     # penalize doubled pawns
                     if self.is_doubled_pawn(piece, i, j):
@@ -346,7 +346,7 @@ class Board:
         return pawn_structure_value
 
     # helper methods for pawn structure evaluation
-    def is_isolated_pawn(self, pawn, row, col):
+    def is_isolated_pawn(self, row, col):
         # Check if the pawn is isolated (no friendly pawns on adjacent files)
         return self[row - 1][col - 1] is None and self[row - 1][col + 1] is None
 

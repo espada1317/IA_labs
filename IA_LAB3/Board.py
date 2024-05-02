@@ -269,15 +269,14 @@ class Board:
         safety_value = 0
         king_x, king_y = king.x, king.y
         player_color = king.color
-        # opponent_color = 'white' if player_color == 'black' else 'black'
 
         # Evaluate pawn shield in front of the king
         pawn_shield = self.get_pawn_shield(king_x, king_y, player_color)
-        safety_value += len(pawn_shield)  # Add value based on the size of the pawn shield
+        safety_value += len(pawn_shield)
 
         # Evaluate open files near the king
         open_files = self.get_open_files(king_x, king_y)
-        safety_value += len(open_files) * 0.5  # Add value for each open file near the king
+        safety_value += len(open_files) * 0.5
 
         # Evaluate piece placement near the king (e.g., knights, bishops)
         piece_placement_value = self.evaluate_piece_placement(king_x, king_y, player_color)
@@ -331,19 +330,19 @@ class Board:
     #                         threats.append(piece)
     #     return threats
 
-    def calculate_pawn_structure_value(self):
-        pawn_structure_value = 0
-        for i in range(8):
-            for j in range(8):
-                piece = self[i][j]
-                if isinstance(piece, Pawn) and piece.color == self.get_player_color():
-                    # penalize isolated pawns
-                    if self.is_isolated_pawn(i, j):
-                        pawn_structure_value -= 0.5
-                    # penalize doubled pawns
-                    if self.is_doubled_pawn(piece, i, j):
-                        pawn_structure_value -= 0.5
-        return pawn_structure_value
+    # def calculate_pawn_structure_value(self):
+    #     pawn_structure_value = 0
+    #     for i in range(8):
+    #         for j in range(8):
+    #             piece = self[i][j]
+    #             if isinstance(piece, Pawn) and piece.color == self.get_player_color():
+    #                 # penalize isolated pawns
+    #                 if self.is_isolated_pawn(i, j):
+    #                     pawn_structure_value -= 0.5
+    #                 # penalize doubled pawns
+    #                 if self.is_doubled_pawn(piece, i, j):
+    #                     pawn_structure_value -= 0.5
+    #     return pawn_structure_value
 
     # helper methods for pawn structure evaluation
     def is_isolated_pawn(self, row, col):
